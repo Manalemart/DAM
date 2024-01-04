@@ -7,8 +7,8 @@ package av1_aa2_enfonsarlaflota;
 import java.util.Scanner;
 
 /**
- * VersiÛ simplificada del joc Enfonsar La Flota. Es tracta de una versiÛ player
- * vs pc, on nomÈs jugar· l'usuari hum‡. El joc tÈ un tauler de 10x10 i es
+ * Versi√≥ simplificada del joc Enfonsar La Flota. Es tracta de una versi√≥ player
+ * vs pc, on nom√©s jugar√° l'usuari hum√†. El joc t√© un tauler de 10x10 i es
  * coloquen automaticament (random) les posicions dels baixells. Compta amb 3
  * nivells de dificultat.
  *
@@ -17,7 +17,7 @@ import java.util.Scanner;
 public class AV1_AA2_EnfonsarLaFlota {
 
     /**
-     * FUNCTION:FunciÛ principal del joc. Es l'encarregada de cridar a
+     * FUNCTION:Funci√≥ principal del joc. Es l'encarregada de cridar a
      * mostrarMenu() i jugar_partida.
      *
      * @param args
@@ -32,7 +32,8 @@ public class AV1_AA2_EnfonsarLaFlota {
         String dades = " ";
 
         mostrarMenu();
-        switch (damana_dades_entre_max_min(dades, min, max)) {
+        dades= entrada.nextLine();
+        switch (demana_dades_entre_max_min(dades, min, max)) {
             case 1:
                 llanxes = 5;
                 vaixells = 3;
@@ -55,13 +56,12 @@ public class AV1_AA2_EnfonsarLaFlota {
                 maxIntents = 10;
                 break;
         }
-        System.out.println(llanxes + " " + maxIntents);
         jugar_partida(files, columnes, llanxes, vaixells, cuirassats, portavions, maxIntents);
 
     }
 
     /**
-     * FUNTION: funciÛ generadora de men˙ principal. A partir de la resposta del
+     * FUNTION: funci√≥ generadora de men√∫ principal. A partir de la resposta del
      * jugador se estableixen el nombre de vaixells
      *
      * @param no necesario
@@ -73,13 +73,13 @@ public class AV1_AA2_EnfonsarLaFlota {
         String levelThree = "1 llanxa i 1 vaixell (10 trets).";
 
         System.out.println("===== BENVINGUTS A AFONAR LA FLOTA ====="
-                + "\n 1. F‡cil. " + levelOne + "\n 2. Mitj‡. " + levelTwo + "\n 3. Dificil. "
+                + "\n 1. F√†cil. " + levelOne + "\n 2. Mitj√†. " + levelTwo + "\n 3. Dificil. "
                 + levelThree + "\n\t Quin nivell vas a triar??");
     }
 
     /**
-     * FUNTION: FunciÛ principal de control del joc. Amb ella es crea el tauler,
-     * i la distribuciÛ de vaixells conforme al nivell de dificultat elegit
+     * FUNTION: Funci√≥ principal de control del joc. Amb ella es crea el tauler,
+     * i la distribuci√≥ de vaixells conforme al nivell de dificultat elegit
      *
      * @param files nombre de files del taules
      * @param columnes nombre de columnes del tauler
@@ -87,7 +87,7 @@ public class AV1_AA2_EnfonsarLaFlota {
      * @param vaixells nombre de vaixells segons nivell
      * @param cuirassats nombre de cuirassats segons nivell
      * @param portavions nombre de portavions segons nivell
-     * @param maxIntents nombre m‡xim d'intetns per a guanyar
+     * @param maxIntents nombre m√†xim d'intetns per a guanyar
      */
     private static void jugar_partida(int files, int columnes, int llanxes,
             int vaixells, int cuirassats, int portavions, int maxIntents) {
@@ -100,25 +100,28 @@ public class AV1_AA2_EnfonsarLaFlota {
         tauler = crear_tauler(files, columnes);
         inserir_barcos(tauler, llanxes, vaixells, cuirassats, portavions);
 
-        while (intents < maxIntents && !veureTot) {
-            mostra_tauler(tauler, false); // Mostra el tauler sense revelar la posiciÛ dels barcos
-            int[] coordenades = demanar_coordenades_tret(tauler, files, columnes);
-            processa_tret(tauler, files, columnes);
+        while (intents < maxIntents && queden_barcos(tauler)==true) {
+            int row = 0, column = 0, tret[]={0,0};
+            mostra_tauler(tauler, true); // Mostra el tauler sense revelar la posici√≥ dels barcos
+            tret = demanar_coordenades_tret(tauler, files, columnes);
+            row = tret[0];
+            column = tret[1];
+            processa_tret(tauler, row, column);
             intents++;
-            veureTot = !queden_barcos(tauler); // Comprova si queden barcos
+            veureTot = queden_barcos(tauler)== false; // Comprova si queden barcos
         }
 
         mostra_tauler(tauler, true); // Mostra el tauler amb tots els barcos
-        if (veureTot) {
+        if (veureTot== true) {
             System.out.println("Has guanyat la partida!");
         } else {
-            System.out.println("Has perdut. No queden mÈs intents.");
+            System.out.println("Has perdut. No queden m√©s intents.");
         }
 
     }
 
     /**
-     * FUNTION: FunciÛ emprada generar un tauler buit donada un nombre X de
+     * FUNTION: Funci√≥ emprada generar un tauler buit donada un nombre X de
      * posicions
      *
      * @param tamany nombre files y columnes a generar
@@ -135,8 +138,8 @@ public class AV1_AA2_EnfonsarLaFlota {
     }
 
     /**
-     * FunciÛ que es cridada per a mostrar el tauler. Fa us d'una cridada
-     * recursiva per a mostrar les lÌnies
+     * Funci√≥ que es cridada per a mostrar el tauler. Fa us d'una cridada
+     * recursiva per a mostrar les l√≠nies
      *
      *
      * @param tauler
@@ -162,7 +165,7 @@ public class AV1_AA2_EnfonsarLaFlota {
             System.out.println(" "); // Fin de la fila
             return;
         }
-        // Per cada posiciÛ de columna = 0 en la fila imprimim la lletra que toque
+        // Per cada posici√≥ de columna = 0 en la fila imprimim la lletra que toque
         if (j == 0) {
             // el valor de la lletra 65 es la lletra A del unicode
             int lletra = 65 + i;
@@ -170,8 +173,8 @@ public class AV1_AA2_EnfonsarLaFlota {
         }
 
         char casella = tauler[i][j];
-        if (!mT && esBaixell(casella)) {
-            System.out.print("-");
+        if (!mT && esBaixell(casella) && casella == '-') {
+            System.out.print(" -");
         } else {
             System.out.print(casella + " ");
         }
@@ -180,7 +183,7 @@ public class AV1_AA2_EnfonsarLaFlota {
     }
 
     /**
-     * FUNCI”: FunciÛ de comprobaciÛ per esbrinar si un tipus de casella
+     * FUNCI√ì: Funci√≥ de comprobaci√≥ per esbrinar si un tipus de casella
      * representa vaixell o no
      *
      * @param casella
@@ -207,7 +210,7 @@ public class AV1_AA2_EnfonsarLaFlota {
      * @param portavions
      */
     public static void inserir_barcos(char[][] tauler, int llanxes, int vaixells, int cuirassats, int portavions) {
-        // IteraciÛ per a cada tipus de vaixell del joc
+        // Iteraci√≥ per a cada tipus de vaixell del joc
         for (int i = 0; i < llanxes; i++) {
             if (!inserir_barco(tauler, 1, 'L')) {
                 System.out.println("No es posible insertar una llanxa.");
@@ -231,7 +234,7 @@ public class AV1_AA2_EnfonsarLaFlota {
     }
 
     /**
-     * FUNCTION: FunciÛ per a insertar un baixell en una coordenada aleatoria.
+     * FUNCTION: Funci√≥ per a insertar un baixell en una coordenada aleatoria.
      *
      * @param tauler tauler de joc
      * @param mida mida del vaixell
@@ -254,7 +257,7 @@ public class AV1_AA2_EnfonsarLaFlota {
     }
 
     /**
-     * FUNCTION: FunciÛ emprada per comprobar que es pot inserir un vaixell,
+     * FUNCTION: Funci√≥ emprada per comprobar que es pot inserir un vaixell,
      * primer es comproba que capiga al tauler si cap, es comproba que no siga
      * una casella ja ocupada.
      *
@@ -269,7 +272,6 @@ public class AV1_AA2_EnfonsarLaFlota {
         if (c + mida > columnes) {
             return false;
         }
-
         for (int i = 0; i < mida; i++) {
             if (tauler[f][c + i] != '-') {
                 return false;
@@ -279,9 +281,10 @@ public class AV1_AA2_EnfonsarLaFlota {
     }
 
     /**
-     * FUNTION: FunciÛ per demanar les coordenades al jugador hum· del tret. En 
-     * la peticiÛ de les files es demana un valor en lletra que es convertira en
-     * un valor int per pasar a la funciÛ demana_dades_entre_max_min
+     * FUNTION: Funci√≥ per demanar les coordenades al jugador hum√° del tret. En
+     * la petici√≥ de les files es demana un valor en lletra que es convertira en
+     * un valor int per pasar a la funci√≥ demana_dades_entre_max_min
+     *
      * @param tauler
      * @param files
      * @param columnes
@@ -289,25 +292,23 @@ public class AV1_AA2_EnfonsarLaFlota {
      */
     public static int[] demanar_coordenades_tret(char[][] tauler, int files, int columnes) {
         Scanner entrada = new Scanner(System.in);
-        int tret[] = {0, 0}, min = 0, max = 0, valorLletra;
-        char conversion;
+        int fila = files - 1;
+        int columna = columnes-1;
+        int tret[] = {0, 0}, min = 0, max = 0;
         String dades;
-        min = 0;
-        max = files - 1;
-        System.out.print("Indica la fila del proper tret(A-J):\n ");
+
+        min = 65;
+        max = min + (fila);
+        System.out.print("Indica la fila del proper tret(A-J):\n");
         dades = entrada.nextLine();
-        conversion = dades.charAt(0);
-        valorLletra = (int)conversion-65;
-        if (valorLletra >= min && valorLletra <= max){
-        dades = String.valueOf(valorLletra);
-        tret[0] = damana_dades_entre_max_min(dades, min, max);
-        }else{
-        System.out.println("Ep. Soles es valen lletres entre la A i ");}
+        tret[0] = demana_dades_entre_max_min(dades, min, max);
+        tret[0]= tret[0]-65;
+
         min = 0;
         max = columnes - 1;
         System.out.print("Indica la columna del proper tret (0-9):\n ");
         dades = entrada.nextLine();
-        tret[1] = damana_dades_entre_max_min(dades, min, max);
+        tret[1] = demana_dades_entre_max_min(dades, min, max);
         return tret;
     }
 
@@ -333,62 +334,35 @@ public class AV1_AA2_EnfonsarLaFlota {
                 tauler[row][column] = 'X';
                 break;
             default:
-                System.out.println("Ep! Has tornat a disparar a un tret anterior");
+                System.out.println("Ep! Has torrnat a disparar a"
+                        + " un tret anterior");
                 break;
         }
     }
 
     /**
-     * FUNCTION: FunciÛ que genera una posiciÛ aleatoria al tauler.
+     * FUNCTION: Funci√≥ que genera una posici√≥ aleatoria al tauler.
      *
      * @param tauler
-     * @param mida
+     * @param mida del vaixell
      * @return
      */
     public static int[] coordenada_aleatoria(char[][] tauler, int mida) {
         int files = tauler.length;
         int columnes = tauler[0].length;
         int fila = (int) (Math.random() * files);
-        int columna = (int) (Math.random() * (columnes - mida + 1));
+        int columna = (int) (Math.random() * ((columnes - mida) + 1));
 
         return new int[]{fila, columna};
     }
 
     /**
-     * FUNCTION: FunciÛ per replegar les dades de l'usuari i comprobar que
-     * siguen valides
+     * FUNCTION: Funci√≥ que recorre el tauler buscant caselles amb lletra
+     * corresponent a vaixell.
      *
-     * @param dades
-     * @param min
-     * @param max
-     * @return
+     * @param tauler
+     * @return false si no queden, True si es troba casella baixell
      */
-    private static int damana_dades_entre_max_min(String dades, int min, int max) {
-        Scanner scanner = new Scanner(System.in);
-        int valor;
-
-        while (true) {
-            //System.out.print(dades);
-            while (!scanner.hasNextInt()) {
-                System.out.println("AixÚ no Ès un n˙mero. Intenta-ho de nou:");
-                scanner.next();
-                System.out.print(dades);
-            }
-            valor = scanner.nextInt();
-
-            if (valor >= min && valor <= max) {
-                return valor;
-            } else {
-                System.out.println("El n˙mero ha de ser entre " + min + " i " + max + ".");
-            }
-        }
-    }
-/**
- * FUNCTION: FunciÛ que recorre el tauler buscant caselles amb lletra corresponent
- * a vaixell. 
- * @param tauler
- * @return false si no queden, True si es troba casella baixell
- */
     public static boolean queden_barcos(char[][] tauler) {
         for (int fila = 0; fila < tauler.length; fila++) {
             for (int columna = 0; columna < tauler[fila].length; columna++) {
@@ -400,5 +374,48 @@ public class AV1_AA2_EnfonsarLaFlota {
         }
         return false;
     }
+
+    /**
+     * FUNCTION: Funci√≥ per replegar les dades de l'usuari i comprobar que
+     * siguen valides. En cas de no ser-lo i entrar al catch es procedeix a 
+     * arreglar les mateixes i en cas de no ser un valor entre min max es demana
+     * altra volta a l'usuari. El bucle while finalitza una volta el valor siga
+     * correcte.     *
+     * @param dades
+     * @param min
+     * @param max
+     * @return
+     */
+       public static int demana_dades_entre_max_min(String dades, int min, int max) {
+        Scanner entrada = new Scanner(System.in);
+        boolean correcte = false;
+        int valor = 0;
+        while (true) {
+            int dadesLongitud = dades.length();
+            if (dadesLongitud == 1) {
+                // Try Catch para solucionar el problema si se detecta
+                try {
+                    valor = Integer.parseInt(dades);
+                } catch (NumberFormatException e) {
+                    String mayus = dades.toUpperCase();
+                    char dadesChar = mayus.charAt(0);
+                    valor = dadesChar;
+                }
+                if (valor >= min && valor <= max) {
+                    correcte = true;
+                    break; // Salir del bucle si el valor es correcto
+                } else {
+                    System.out.println("Escriu una opcio valida");
+                    dades = entrada.nextLine();
+                }
+            } else {
+                System.out.println("Escriu una opcio valida");
+                dades = entrada.nextLine();
+            }
+        }
+        return valor;
+    }
+
+    
 
 }
