@@ -12,7 +12,8 @@ import java.util.Scanner;
  * coloquen automaticament (random) les posicions dels baixells. Compta amb 3
  * nivells de dificultat.
  *
- * @author Manel
+ * @author Manel Alemany Martínez
+ * @version 05/01/2024.
  */
 public class AV1_AA2_EnfonsarLaFlota {
 
@@ -35,6 +36,7 @@ public class AV1_AA2_EnfonsarLaFlota {
         dades= entrada.nextLine();
         switch (demana_dades_entre_max_min(dades, min, max)) {
             case 1:
+                System.out.println("Has elegit el nivell Fàcil\n");
                 llanxes = 5;
                 vaixells = 3;
                 cuirassats = 1;
@@ -42,6 +44,7 @@ public class AV1_AA2_EnfonsarLaFlota {
                 maxIntents = 50;
                 break;
             case 2:
+                System.out.println("Has elegit el nivell Mitjà\n");
                 llanxes = 5;
                 vaixells = 3;
                 cuirassats = 1;
@@ -49,6 +52,7 @@ public class AV1_AA2_EnfonsarLaFlota {
                 maxIntents = 30;
                 break;
             case 3:
+                System.out.println("Has elegit el nivell Dificil! Molta sort\n");
                 llanxes = 1;
                 vaixells = 1;
                 cuirassats = 0;
@@ -94,7 +98,12 @@ public class AV1_AA2_EnfonsarLaFlota {
         //creem boolean per saber si mostrar tauler o no
         boolean veureTot = false;
         char[][] tauler = new char[files][columnes];
-        System.out.println("Inici del joc. Benvingut comandant!");
+        System.out.println("""
+                           \t---Inici del joc--- 
+                           
+                            \t Benvingut comandant!
+                           
+                            \t Que les aigues te siguen propicies!\n""");
 
         tauler = crear_tauler(files, columnes);
         inserir_barcos(tauler, llanxes, vaixells, cuirassats, portavions);
@@ -107,13 +116,18 @@ public class AV1_AA2_EnfonsarLaFlota {
             column = tret[1];
             processa_tret(tauler, row, column);
             intents++;
+            if (maxIntents-intents <=5){
+            System.out.println("Ull, sols resten " + (maxIntents-intents));
+            }else{
+                System.out.println("Dus " + intents +" de " + maxIntents);
+            }
         }
         
-        mostra_tauler(tauler, !veureTot); // Mostra el tauler amb tots els barcos
-        if (veureTot== true) {
-            System.out.println("Has guanyat la partida!");
+        mostra_tauler(tauler, !veureTot); // Mostra el tauler amb tots els vaixells
+        if (queden_barcos(tauler)== false) {
+            System.out.println("! ENHORABONA COMANDANT! AFONADA TOTA LA FLOTA!");
         } else {
-            System.out.println("Has perdut. No queden més intents.");
+            System.out.println("Prepareu les llanxes salvavides. Hem perdut. No queden més intents");
         }
 
     }
@@ -138,8 +152,6 @@ public class AV1_AA2_EnfonsarLaFlota {
     /**
      * Funció que es cridada per a mostrar el tauler. Fa us d'una cridada
      * recursiva per a mostrar les línies
-     *
-     *
      * @param tauler
      * @param veureTot
      */
@@ -160,12 +172,12 @@ public class AV1_AA2_EnfonsarLaFlota {
      */
     private static void mostra_fila(char[][] tauler, int i, int j, boolean mT) {
         if (j >= tauler[i].length) {
-            System.out.println(" "); // Fin de la fila
+            System.out.println(" "); // Final de la fila
             return;
         }
         // Per cada posició de columna = 0 en la fila imprimim la lletra que toque
         if (j == 0) {
-            // el valor de la lletra 65 es la lletra A del unicode
+            // el valor de la lletra 65 es la lletra A del ascii
             int lletra = 65 + i;
             System.out.print((char) lletra + " ");
         }
@@ -321,14 +333,14 @@ public class AV1_AA2_EnfonsarLaFlota {
     public static void processa_tret(char[][] tauler, int row, int column) {
         switch (tauler[row][column]) {
             case '-':
-                System.out.println("Aigua!");
+                System.out.println("!!Aigua!!!");
                 tauler[row][column] = 'A';
                 break;
             case 'L':
             case 'B':
             case 'C':
             case 'P':
-                System.out.println("Tocat!");
+                System.out.println("¡¡¡ TOCAT !!!");
                 tauler[row][column] = 'X';
                 break;
             default:
@@ -343,7 +355,7 @@ public class AV1_AA2_EnfonsarLaFlota {
      *
      * @param tauler
      * @param mida del vaixell
-     * @return
+     * @return new int[]{fila,columna}
      */
     public static int[] coordenada_aleatoria(char[][] tauler, int mida) {
         int files = tauler.length;
@@ -359,7 +371,7 @@ public class AV1_AA2_EnfonsarLaFlota {
      * siguen valides. En cas de no ser-lo i entrar al catch es procedeix a 
      * arreglar les mateixes i en cas de no ser un valor entre min max es demana
      * altra volta a l'usuari. El bucle while finalitza una volta el valor siga
-     * correcte.     *
+     * correcte.
      * @param dades
      * @param min
      * @param max
