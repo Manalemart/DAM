@@ -93,25 +93,23 @@ public class AV1_AA2_EnfonsarLaFlota {
             int vaixells, int cuirassats, int portavions, int maxIntents) {
         //creem boolean per saber si mostrar tauler o no
         boolean veureTot = false;
-        int intents = 0;
         char[][] tauler = new char[files][columnes];
         System.out.println("Inici del joc. Benvingut comandant!");
 
         tauler = crear_tauler(files, columnes);
         inserir_barcos(tauler, llanxes, vaixells, cuirassats, portavions);
-
+        int intents = 0;
         while (intents < maxIntents && queden_barcos(tauler)==true) {
             int row = 0, column = 0, tret[]={0,0};
-            mostra_tauler(tauler, true); // Mostra el tauler sense revelar la posició dels barcos
+            mostra_tauler(tauler, veureTot); // Mostra el tauler sense revelar la posició dels barcos
             tret = demanar_coordenades_tret(tauler, files, columnes);
             row = tret[0];
             column = tret[1];
             processa_tret(tauler, row, column);
             intents++;
-            veureTot = queden_barcos(tauler)== false; // Comprova si queden barcos
         }
-
-        mostra_tauler(tauler, true); // Mostra el tauler amb tots els barcos
+        
+        mostra_tauler(tauler, !veureTot); // Mostra el tauler amb tots els barcos
         if (veureTot== true) {
             System.out.println("Has guanyat la partida!");
         } else {
@@ -173,8 +171,8 @@ public class AV1_AA2_EnfonsarLaFlota {
         }
 
         char casella = tauler[i][j];
-        if (!mT && esBaixell(casella) && casella == '-') {
-            System.out.print(" -");
+        if (!mT && esBaixell(casella)) {
+            System.out.print("- ");
         } else {
             System.out.print(casella + " ");
         }
@@ -356,26 +354,7 @@ public class AV1_AA2_EnfonsarLaFlota {
         return new int[]{fila, columna};
     }
 
-    /**
-     * FUNCTION: Funció que recorre el tauler buscant caselles amb lletra
-     * corresponent a vaixell.
-     *
-     * @param tauler
-     * @return false si no queden, True si es troba casella baixell
-     */
-    public static boolean queden_barcos(char[][] tauler) {
-        for (int fila = 0; fila < tauler.length; fila++) {
-            for (int columna = 0; columna < tauler[fila].length; columna++) {
-                char casella = tauler[fila][columna];
-                if (esBaixell(casella)) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    /**
+       /**
      * FUNCTION: Funció per replegar les dades de l'usuari i comprobar que
      * siguen valides. En cas de no ser-lo i entrar al catch es procedeix a 
      * arreglar les mateixes i en cas de no ser un valor entre min max es demana
@@ -415,7 +394,24 @@ public class AV1_AA2_EnfonsarLaFlota {
         }
         return valor;
     }
-
+ /**
+     * FUNCTION: Funció que recorre el tauler buscant caselles amb lletra
+     * corresponent a vaixell.
+     *
+     * @param tauler
+     * @return false si no queden, True si es troba casella baixell
+     */
+    public static boolean queden_barcos(char[][] tauler) {
+        for (int fila = 0; fila < tauler.length; fila++) {
+            for (int columna = 0; columna < tauler[fila].length; columna++) {
+                char casella = tauler[fila][columna];
+                if (esBaixell(casella)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
     
 
 }
